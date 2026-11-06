@@ -1,58 +1,120 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# E-Report
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+E-Report adalah aplikasi pelaporan digital untuk membantu warga menyampaikan laporan dan memantau tindak lanjutnya, serta membantu administrator mengelola laporan secara terpusat.
 
-## About Laravel
+## Fitur
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Warga
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Registrasi dan login menggunakan session.
+- Membuat, melihat, mencari, dan memfilter laporan milik sendiri.
+- Mengunggah foto bukti dengan validasi.
+- Mengedit atau menghapus laporan yang masih berstatus pending.
+- Memantau status dan riwayat perubahan laporan.
+- Menerima notifikasi pembaruan laporan.
+- Melihat ringkasan laporan pribadi pada dashboard.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Administrator
 
-## Learning Laravel
+- Melihat ringkasan analitik dan tren laporan.
+- Mencari, memfilter, mengurutkan, serta meninjau laporan warga.
+- Memperbarui status laporan dan memberikan tanggapan.
+- Melihat riwayat perubahan status.
+- Mengelola profil dan status aktif akun warga.
+- Meninjau aktivitas dan notifikasi terkait laporan.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Status laporan mengikuti implementasi aplikasi dan schema database: `pending`, `approved`, dan `rejected`.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Teknologi
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+- PHP 8.3 atau lebih baru dan Laravel 13.
+- MySQL untuk penggunaan aplikasi; SQLite in-memory digunakan pada konfigurasi test.
+- Composer untuk dependency PHP.
+- Node.js dan npm, Vite 8, serta Tailwind CSS 4 untuk asset frontend.
+- Blade dan Livewire 4.
+- Pest untuk pengujian.
 
-## Agentic Development
+## Persyaratan
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+- PHP 8.3+ dengan ekstensi Laravel yang diperlukan, termasuk PDO MySQL bila menggunakan MySQL.
+- Composer.
+- Node.js versi yang didukung Vite 8 (Node.js 20.19+ atau 22.12+).
+- MySQL yang kompatibel untuk database lokal.
+- Git.
+
+Untuk pemeriksaan platform dependency PHP, jalankan:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer check-platform-reqs
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Menjalankan secara lokal
 
-## Contributing
+1. Pasang dependency PHP:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+   ```bash
+   composer install
+   ```
 
-## Code of Conduct
+2. Salin template environment lokal, lalu buat application key:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-## Security Vulnerabilities
+3. Siapkan database MySQL khusus development, lalu atur koneksi database lokal di `.env`. Jangan memakai database produksi atau menyalin `.env` dari mesin lain.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+4. Jalankan migration hanya terhadap database development yang sudah dipilih dan diverifikasi:
 
-## License
+   ```bash
+   php artisan migrate
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+   Perintah ini mengubah schema database yang dikonfigurasi. Untuk database yang berisi data, buat dan verifikasi backup lebih dahulu. Jangan gunakan perintah reset/refresh database untuk instalasi biasa.
+
+5. Pasang dependency frontend dan buat asset:
+
+   ```bash
+   npm ci
+   npm run build
+   ```
+
+6. Jalankan server development:
+
+   ```bash
+   php artisan serve
+   ```
+
+   Buka alamat lokal yang ditampilkan Artisan. Untuk pengembangan frontend dengan hot reload, jalankan `npm run dev` di terminal terpisah.
+
+Registrasi publik membuat akun warga. Seeder berisi data pengembangan; jangan jalankan seeder pada database produksi.
+
+## Pengujian dan pemeriksaan dependency
+
+Jalankan seluruh test:
+
+```bash
+php artisan test --compact
+```
+
+Pemeriksaan tambahan yang tersedia:
+
+```bash
+composer audit
+npm audit
+vendor/bin/pint --format agent
+npm run build
+```
+
+Test suite menggunakan SQLite in-memory berdasarkan konfigurasi PHPUnit dan tidak memerlukan perubahan pada database aplikasi lokal.
+
+## Keamanan dan environment
+
+- `.env` berisi konfigurasi dan rahasia runtime; file tersebut tidak boleh dimasukkan ke Git. Gunakan `.env.example` hanya sebagai template.
+- Buat APP_KEY untuk environment masing-masing. Jangan menyalin key development ke production atau membagikannya.
+- Production harus menggunakan `APP_ENV=production`, `APP_DEBUG=false`, HTTPS, serta cookie session `Secure` dan `HttpOnly`.
+- Atur kredensial database dan layanan melalui secret manager atau environment deployment; jangan menaruhnya di source code, README, issue, atau log.
+- Foto bukti laporan disimpan pada storage privat dan harus diakses melalui route yang melakukan autentikasi dan otorisasi. Jangan memindahkannya ke direktori publik tanpa peninjauan keamanan.
+- Batasi akses database dan file storage dengan prinsip least privilege. Siapkan backup dan verifikasi prosedur pemulihan sebelum perubahan production.
+- Tinjau [DEPLOYMENT-CHECKLIST.md](DEPLOYMENT-CHECKLIST.md) sebelum menyiapkan deployment.
